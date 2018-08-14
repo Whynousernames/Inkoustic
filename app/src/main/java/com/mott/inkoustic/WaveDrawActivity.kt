@@ -20,6 +20,7 @@ class WaveDrawActivity : AppCompatActivity() {
   private val play by lazy { findViewById<Button>(R.id.play) }
   private val list by lazy { findViewById<Button>(R.id.list_java) }
   private val simple by lazy { findViewById<Button>(R.id.simple_java) }
+  //val mp = MediaPlayer.create(this, R.raw.testsong);
 
   private val progressAnim: ObjectAnimator by lazy {
     ObjectAnimator.ofFloat(wave, "progress", 0F, 100F).apply {
@@ -34,6 +35,11 @@ class WaveDrawActivity : AppCompatActivity() {
 
     play.setOnClickListener {
       inflateWave()
+    }
+
+    list.setOnClickListener{
+
+      //mp.stop();
     }
 
 
@@ -76,8 +82,10 @@ class WaveDrawActivity : AppCompatActivity() {
 
   private fun inflateWave() {
     wave.setRawData(assets.open("sample.wav").readBytes()) { progressAnim.start() }
-    val mp = MediaPlayer.create(this, R.raw.testsong);
-    mp.start();
+
+
+    //mp.start()
+
 
 
 

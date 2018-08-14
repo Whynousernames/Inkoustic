@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void showHomeActivity()
     {
-        Intent intent = new Intent(getApplicationContext(), ScanTattooActivity.class);
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         startActivity(intent);
     }
 

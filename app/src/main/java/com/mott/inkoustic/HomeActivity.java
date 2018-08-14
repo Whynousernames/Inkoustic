@@ -35,7 +35,29 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    public void showScanTattooActivity()
+    {
+        Intent intent = new Intent(getApplicationContext(), ScanTattooActivity.class);
+        startActivity(intent);
+    }
 
+    public void showWaveDrawActivity()
+    {
+        Intent intent = new Intent(this, WaveDrawActivity.class);
+
+        startActivity(intent);
+
+    }
+
+    public void scanTattoo(View view)
+    {
+        showScanTattooActivity();
+    }
+
+    public void waveDraw(View view)
+    {
+        showWaveDrawActivity();
+    }
 
 
 
