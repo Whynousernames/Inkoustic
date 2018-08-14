@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/usernameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="215dp"
+        android:backgroundTint="#d7f1ff"
+        android:ems="10"
+        android:hint="Enter your username..."
+        android:inputType="textPersonName"
+        android:textColor="#d7f1ff"
+        android:textColorHint="#d7f1ff" />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="151dp"
+        android:backgroundTint="#d7f1ff"
+        android:ems="10"
+        android:hint="Enter your password..."
+        android:inputType="textPassword"
+        android:textColor="#d7f1ff"
+        android:textColorHint="#d7f1ff" />
+
+    <Button
+        android:id="@+id/signupButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="200dp"
+        android:background="@drawable/buttonblue"
+        android:onClick="signUp"
+        android:text="Sign Up" />
+
+    <TextView
+        android:id="@+id/changeSignupModeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/signupButton"
+        android:layout_alignBottom="@+id/signupButton"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@+id/signupButton"
+        android:layout_toRightOf="@+id/signupButton"
+        android:text="or, Login"
+        android:textColor="@android:color/holo_blue_dark" />
+
+</RelativeLayout>
