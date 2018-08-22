@@ -1,6 +1,7 @@
 package com.mott.inkoustic;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,6 +12,9 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.parse.ParseAnalytics;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -52,6 +56,7 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
     Mat descriptors2,descriptors1;
     Mat img1;
     MatOfKeyPoint keypoints1,keypoints2;
+    int match_count = 0;
 
     static {
         if (!OpenCVLoader.initDebug())
@@ -89,7 +94,7 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
         matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE_HAMMING);
         img1 = new Mat();
         AssetManager assetManager = getAssets();
-        InputStream istr = assetManager.open("a.jpeg.jpg");
+        InputStream istr = assetManager.open("ajpeg2.jpg");
         Bitmap bitmap = BitmapFactory.decodeStream(istr);
         Utils.bitmapToMat(bitmap, img1);
         Imgproc.cvtColor(img1, img1, Imgproc.COLOR_RGB2GRAY);
@@ -120,7 +125,7 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.scantattoo_activity_java_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
-        tvName = (TextView) findViewById(R.id.text1);
+        //tvName = (TextView) findViewById(R.id.text1);
 
     }
 
@@ -141,6 +146,8 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
+
+
     }
 
     public void onDestroy() {
@@ -152,6 +159,8 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
     public void onCameraViewStarted(int width, int height) {
         w = width;
         h = height;
+
+
     }
 
     public void onCameraViewStopped() {
@@ -159,16 +168,21 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
 
     public Mat recognize(Mat aInputFrame) {
 
+
+
         Imgproc.cvtColor(aInputFrame, aInputFrame, Imgproc.COLOR_RGB2GRAY);
         descriptors2 = new Mat();
         keypoints2 = new MatOfKeyPoint();
         detector.detect(aInputFrame, keypoints2);
         descriptor.compute(aInputFrame, keypoints2, descriptors2);
+        int count = 0;
+
 
         // Matching
         MatOfDMatch matches = new MatOfDMatch();
         if (img1.type() == aInputFrame.type()) {
             matcher.match(descriptors1, descriptors2, matches);
+
         } else {
             return aInputFrame;
         }
@@ -185,10 +199,14 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
                 max_dist = dist;
         }
 
+        double goodMatchesSum = 0;
+
         LinkedList<DMatch> good_matches = new LinkedList<DMatch>();
         for (int i = 0; i < matchesList.size(); i++) {
             if (matchesList.get(i).distance <= (1.5 * min_dist))
                 good_matches.addLast(matchesList.get(i));
+                goodMatchesSum += matchesList.get(i).distance;
+                count ++;
         }
 
         MatOfDMatch goodMatches = new MatOfDMatch();
@@ -201,11 +219,36 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
         Features2d.drawMatches(img1, keypoints1, aInputFrame, keypoints2, goodMatches, outputImg, GREEN, RED, drawnMatches, Features2d.NOT_DRAW_SINGLE_POINTS);
         Imgproc.resize(outputImg, outputImg, aInputFrame.size());
 
+
+        double matchPercentage =  goodMatchesSum/ (double) good_matches.size();
+
+        if(matchPercentage/count >= 5)
+        {
+            match_count ++;
+
+            if(match_count > 20)
+            {
+
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(intent);
+            }
+
+        }
+
+
+
+
         return outputImg;
     }
 
+
+
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         return recognize(inputFrame.rgba());
+
+
+
+
 
     }
 }
