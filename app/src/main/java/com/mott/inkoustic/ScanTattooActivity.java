@@ -57,6 +57,10 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
     Mat img1;
     MatOfKeyPoint keypoints1,keypoints2;
     int match_count = 0;
+    public static int imageNo = 0;
+    public static int imageListLength = 0;
+    int badMatch_count = 0;
+
 
     static {
         if (!OpenCVLoader.initDebug())
@@ -89,20 +93,46 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
 
     private void initializeOpenCVDependencies() throws IOException {
         mOpenCvCameraView.enableView();
-        detector = FeatureDetector.create(FeatureDetector.ORB);
-        descriptor = DescriptorExtractor.create(DescriptorExtractor.ORB);
-        matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE_HAMMING);
-        img1 = new Mat();
-        AssetManager assetManager = getAssets();
-        InputStream istr = assetManager.open("ajpeg2.jpg");
-        Bitmap bitmap = BitmapFactory.decodeStream(istr);
-        Utils.bitmapToMat(bitmap, img1);
-        Imgproc.cvtColor(img1, img1, Imgproc.COLOR_RGB2GRAY);
-        img1.convertTo(img1, 0); //converting the image to match with the type of the cameras image
-        descriptors1 = new Mat();
-        keypoints1 = new MatOfKeyPoint();
-        detector.detect(img1, keypoints1);
-        descriptor.compute(img1, keypoints1, descriptors1);
+        getimage();
+
+
+    }
+
+    public void getimage() throws IOException
+    {
+
+        try {
+
+            String[] imageList = getAssets().list("images");
+            imageListLength = imageList.length;
+
+
+                detector = FeatureDetector.create(FeatureDetector.ORB);
+                descriptor = DescriptorExtractor.create(DescriptorExtractor.ORB);
+                matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE_HAMMING);
+                img1 = new Mat();
+                AssetManager assetManager = getAssets();
+                InputStream istr = assetManager.open("images/"+ imageList[imageNo]);
+                Bitmap bitmap = BitmapFactory.decodeStream(istr);
+                Utils.bitmapToMat(bitmap, img1);
+                Imgproc.cvtColor(img1, img1, Imgproc.COLOR_RGB2GRAY);
+                img1.convertTo(img1, 0); //converting the image to match with the type of the cameras image
+                descriptors1 = new Mat();
+                keypoints1 = new MatOfKeyPoint();
+                detector.detect(img1, keypoints1);
+                descriptor.compute(img1, keypoints1, descriptors1);
+
+
+
+
+
+        }
+        catch (IOException e){
+            e.printStackTrace();
+
+
+        }
+
 
     }
 
@@ -110,6 +140,9 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
     public ScanTattooActivity() {
 
         Log.i(TAG, "Instantiated new " + this.getClass());
+
+
+
     }
 
     /**
@@ -222,18 +255,64 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
 
         double matchPercentage =  goodMatchesSum/ (double) good_matches.size();
 
+
+
         if(matchPercentage/count >= 5)
         {
+
+
             match_count ++;
 
             if(match_count > 20)
             {
 
-                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                Intent intent = new Intent(getBaseContext(), HomeActivity.class);
+                intent.putExtra("matchImageValue", imageNo);
                 startActivity(intent);
             }
 
         }
+        else if (matchPercentage/count < 5)
+        {
+            if(match_count > 0)
+            {
+                match_count--;
+                badMatch_count++;
+                if (badMatch_count > 10 && imageNo < imageListLength -4);
+                {
+                    imageNo++;
+
+                    Intent refresh = new Intent(this, ScanTattooActivity.class);
+
+                    this.finish();
+                    overridePendingTransition(0,0);
+                    startActivity(refresh);
+                    overridePendingTransition(0,0);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                }
+            }
+
+
+        }
+
+
+
 
 
 
@@ -245,6 +324,7 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         return recognize(inputFrame.rgba());
+
 
 
 

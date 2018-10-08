@@ -14,13 +14,16 @@ import android.widget.Button
 import kotlinx.android.synthetic.main.activity_another.view.*
 import rm.com.audiowave.AudioWaveView
 
+
 class WaveDrawActivity : AppCompatActivity() {
 
   private val wave by lazy { findViewById<AudioWaveView>(R.id.wave) }
   private val play by lazy { findViewById<Button>(R.id.play) }
   private val list by lazy { findViewById<Button>(R.id.list_java) }
   private val simple by lazy { findViewById<Button>(R.id.simple_java) }
-  //val mp = MediaPlayer.create(this, R.raw.testsong);
+  private lateinit var mp:MediaPlayer
+
+
 
   private val progressAnim: ObjectAnimator by lazy {
     ObjectAnimator.ofFloat(wave, "progress", 0F, 100F).apply {
@@ -33,13 +36,18 @@ class WaveDrawActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_wavedraw)
 
+    val songList = assets.list("songs")
+    
+
+
     play.setOnClickListener {
       inflateWave()
+      //mp.start()
     }
 
     list.setOnClickListener{
 
-      //mp.stop();
+      mp.stop();
     }
 
 
@@ -81,7 +89,7 @@ class WaveDrawActivity : AppCompatActivity() {
   }
 
   private fun inflateWave() {
-    wave.setRawData(assets.open("sample.wav").readBytes()) { progressAnim.start() }
+    wave.setRawData(assets.open("songs/" + "sample.wav").readBytes()) { progressAnim.start() }
 
 
     //mp.start()
