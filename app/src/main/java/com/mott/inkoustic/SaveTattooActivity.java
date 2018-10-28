@@ -173,6 +173,7 @@ public class SaveTattooActivity extends AppCompatActivity {
         String fName = "Image" +(countLength+1) + ".jpg" ;
         File file = new File(directory, fName);
 
+        mediaPlayer.stop();
 
 
 
@@ -188,6 +189,10 @@ public class SaveTattooActivity extends AppCompatActivity {
 
             out.flush();
             out.close();
+
+            Toast.makeText(this, "Save Successful", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
 
 
 

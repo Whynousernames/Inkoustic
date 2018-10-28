@@ -291,7 +291,7 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
             }
 
         }
-        else if (good_matches.size() > 100)
+        else if (good_matches.size() > 30)
         {
             if(match_count > 0) {
                 match_count--;
@@ -314,9 +314,10 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
 
 
                 }
-                else if (badMatch_count> 10 && imageNo == imageListLength)
+                else if (imageNo == imageListLength)
                 {
                     imageNo = 0;
+                    badMatch_count = 0;
 
                 }
                 badMatch_count++;
