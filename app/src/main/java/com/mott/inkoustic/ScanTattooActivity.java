@@ -2,6 +2,7 @@ package com.mott.inkoustic;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -35,10 +36,12 @@ import org.opencv.features2d.Features2d;
 import org.opencv.imgproc.Imgproc;
 
 
-
-
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -103,8 +106,19 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
 
         try {
 
-            String[] imageList = getAssets().list("images");
-            imageListLength = imageList.length;
+
+
+            List<String> fileNames = new ArrayList<>();
+            File folder = new File(Environment.getExternalStorageDirectory(), "InkousticImages");
+            if (!folder.exists()) folder.mkdir();
+            for (File file : folder.listFiles()) {
+                String filename = file.getName().toLowerCase();
+                if (filename.endsWith(".jpg") || filename.endsWith("jpeg")) {
+                    fileNames.add(filename);
+                }
+            }
+
+            imageListLength = fileNames.size();
 
 
                 detector = FeatureDetector.create(FeatureDetector.ORB);
@@ -112,8 +126,13 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
                 matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE_HAMMING);
                 img1 = new Mat();
                 AssetManager assetManager = getAssets();
-                InputStream istr = assetManager.open("images/"+ imageList[imageNo]);
-                Bitmap bitmap = BitmapFactory.decodeStream(istr);
+
+                File imgFile = new File(Environment.getExternalStorageDirectory(), "InkousticImages/" + fileNames.toArray()[imageNo]);
+
+                //InputStream istr = assetManager.open("images/"+ imageList[imageNo]);
+                //InputStream istr = assetManager.open(fileNames.toArray()[imageNo]);
+                //InputStream istr = fileNames.toArray()[imageNo];
+                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 Utils.bitmapToMat(bitmap, img1);
                 Imgproc.cvtColor(img1, img1, Imgproc.COLOR_RGB2GRAY);
                 img1.convertTo(img1, 0); //converting the image to match with the type of the cameras image
@@ -127,7 +146,7 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
 
 
         }
-        catch (IOException e){
+        catch (Exception e){
             e.printStackTrace();
 
 
@@ -257,28 +276,32 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
 
 
 
-        if(matchPercentage/count >= 5)
+        if(good_matches.size() <= 20)
         {
 
 
             match_count ++;
 
-            if(match_count > 20)
+            if(match_count > 10)
             {
 
-                Intent intent = new Intent(getBaseContext(), HomeActivity.class);
+                Intent intent = new Intent(ScanTattooActivity.this, Mp3PlayerActivity.class);
                 intent.putExtra("matchImageValue", imageNo);
                 startActivity(intent);
             }
 
         }
-        else if (matchPercentage/count < 5)
+        else if (good_matches.size() > 100)
         {
-            if(match_count > 0)
-            {
+            if(match_count > 0) {
                 match_count--;
                 badMatch_count++;
-                if (badMatch_count > 10 && imageNo < imageListLength -4);
+            }
+            else{
+
+
+
+               if (badMatch_count > 10 && imageNo < imageListLength)
                 {
                     imageNo++;
 
@@ -290,22 +313,14 @@ public class ScanTattooActivity extends Activity implements CameraBridgeViewBase
                     overridePendingTransition(0,0);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                }
+                else if (badMatch_count> 10 && imageNo == imageListLength)
+                {
+                    imageNo = 0;
 
                 }
+                badMatch_count++;
+
             }
 
 

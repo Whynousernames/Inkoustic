@@ -4,30 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/backgroundapp"
     tools:context=".HomeActivity">
+
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/button2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="129dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/buttonblue"
         android:onClick="waveDraw"
         android:text="WaveDraw" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="139dp"
+        android:layout_marginTop="200dp"
+        android:background="@drawable/buttonblue"
         android:onClick="scanTattoo"
-        android:text="ScanTattoo" />
+        android:text="Scan Tattoo" />
 
-    /
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/buttonblue"
+        android:onClick="saveTattoo"
+        android:text="Save Tattoo" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/buttonblue"
+        android:onClick="webView"
+        android:text="Nearby Studios" />
+
+    <Button
+        android:id="@+id/buttonHelp"
+        android:layout_width="35dp"
+        android:layout_height="28dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:drawable/ic_menu_help"
+        android:onClick="help"
+        android:backgroundTint="@android:color/holo_blue_light" />
+
+
+
 </RelativeLayout>
 
 

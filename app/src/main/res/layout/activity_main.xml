@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/loginpagebackground"
     android:paddingBottom="16dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
@@ -61,5 +61,15 @@
         android:layout_toRightOf="@+id/signupButton"
         android:text="or, Login"
         android:textColor="@android:color/holo_blue_dark" />
+
+    <Button
+        android:id="@+id/buttonHelp"
+        android:layout_width="35dp"
+        android:layout_height="28dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:drawable/ic_menu_help"
+        android:onClick="help"
+        android:backgroundTint="@android:color/holo_blue_light" />
 
 </RelativeLayout>

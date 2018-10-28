@@ -1,7 +1,9 @@
 package com.mott.inkoustic;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,6 +22,10 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -30,9 +36,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView changeSignupModeTextView;
 
     EditText passwordEditText;
+    private File cacheDir = null;
+
+    public void saveData(String data){
+        File root_text = Environment.getExternalStorageDirectory();
+        try{ File folder = new File(Environment.getExternalStorageDirectory() + "/InkousticImages");
+            boolean success = true;
+            if (!folder.exists()) {
+                success = folder.mkdir();
+            }
+
+
+
+            BufferedWriter fwv = new BufferedWriter(new FileWriter(new File("/sdcard/InkousticImages/SavedData.txt"), false));
+            if (root_text.canWrite()) {
+                fwv.write(data);
+                fwv.close();
+            }
+        }catch (Exception e){
+            Log.e("MODEL", "ERROR: " + e.toString());
+        }
+    }
 
     public void showHomeActivity()
     {
+
+
+        saveData("hello");
+
+
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         startActivity(intent);
     }
@@ -125,7 +157,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
+    public void help(View view)
+    {
+        Toast.makeText(MainActivity.this, "Please enter a Username And Password to signup or login.", Toast.LENGTH_LONG).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

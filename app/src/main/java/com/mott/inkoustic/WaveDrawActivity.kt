@@ -6,6 +6,7 @@ import android.content.res.AssetFileDescriptor
 import android.graphics.drawable.BitmapDrawable
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -13,6 +14,19 @@ import android.view.animation.LinearInterpolator
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_another.view.*
 import rm.com.audiowave.AudioWaveView
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.Uri
+import android.os.Environment
+import android.view.View
+import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_wavedraw.view.*
+import kotlinx.android.synthetic.main.item_audio.*
+import java.io.File
+import java.io.FileOutputStream
+import java.util.*
+
+var songCounter = 0
 
 
 class WaveDrawActivity : AppCompatActivity() {
@@ -21,7 +35,9 @@ class WaveDrawActivity : AppCompatActivity() {
   private val play by lazy { findViewById<Button>(R.id.play) }
   private val list by lazy { findViewById<Button>(R.id.list_java) }
   private val simple by lazy { findViewById<Button>(R.id.simple_java) }
-  private lateinit var mp:MediaPlayer
+
+
+
 
 
 
@@ -32,28 +48,60 @@ class WaveDrawActivity : AppCompatActivity() {
     }
   }
 
+
+
+
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_wavedraw)
 
     val songList = assets.list("songs")
+    val help = findViewById<Button>(R.id.buttonHelp)
+
+
     
 
 
     play.setOnClickListener {
       inflateWave()
-      //mp.start()
+
     }
 
     list.setOnClickListener{
 
-      mp.stop();
+
+        if(songCounter<5) {
+          songCounter++
+          Toast.makeText(this, "Next song selected please click play", Toast.LENGTH_LONG).show()
+        }
+      else
+        {
+          Toast.makeText(this, "No more songs available", Toast.LENGTH_LONG).show()
+        }
+
+    }
+    help.setOnClickListener{
+
+      Toast.makeText(this, "Click play to play the audio and display the waveform, or click next or previous to select another song", Toast.LENGTH_LONG).show()
     }
 
 
 
-    simple.setOnClickListener {
-      startActivity(Intent(this, AnotherActivity::class.java))
+
+
+
+   simple.setOnClickListener {
+
+     if (songCounter >0)
+     {
+       songCounter--
+       Toast.makeText(this, "Previous song selected please click play", Toast.LENGTH_LONG).show()
+     }
+     else
+     {
+       Toast.makeText(this, "You are at the first song, cant go back anymore", Toast.LENGTH_LONG).show()
+     }
     }
 
     wave.onProgressChanged = { progress, byUser ->
@@ -89,15 +137,21 @@ class WaveDrawActivity : AppCompatActivity() {
   }
 
   private fun inflateWave() {
-    wave.setRawData(assets.open("songs/" + "sample.wav").readBytes()) { progressAnim.start() }
 
 
-    //mp.start()
-
-
-
+    val songStringList = arrayOf("Gummy.mp3", "sample.wav", "testsong.wav")
+    wave.setRawData(assets.open("songs/" +songStringList[songCounter] ).readBytes()) { progressAnim.start() }
 
   }
 
 
+
+
+
 }
+
+
+
+
+
+

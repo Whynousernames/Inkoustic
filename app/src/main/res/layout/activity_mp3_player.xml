@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/backgroundapp"
 
     tools:context=".Mp3PlayerActivity">
 
@@ -16,6 +16,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="129dp"
+        android:background="@drawable/buttonblue"
         android:onClick="play"
         android:text="Play" />
 
@@ -24,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:background="@drawable/buttonblue"
         android:onClick="stop"
         android:text="Stop" />
 
@@ -31,12 +33,33 @@
         android:id="@+id/buttonPause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="139dp"
+        android:layout_marginTop="199dp"
+        android:background="@drawable/buttonblue"
         android:onClick="pause"
         android:text="Pause" />
 
+    <Button
+        android:id="@+id/buttonMainMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="121dp"
+        android:background="@drawable/buttonblue"
+        android:onClick="mainMenu"
+        android:text="Main Menu" />
+
+    <Button
+        android:id="@+id/buttonHelp"
+        android:layout_width="35dp"
+        android:layout_height="28dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:drawable/ic_menu_help"
+        android:backgroundTint="@android:color/holo_blue_light"
+        android:onClick="help" />
 
 
 </RelativeLayout>
